@@ -1,0 +1,33 @@
+---
+# NOTE: Rustup package is only available in Debian 13 repositories (which is not yet released). It is therefore installed via installer.
+
+- name: Ensure we are using apt
+  fail:
+    msg: "This role only supports {{ ansible_os_family }} systems that use apt as a package manager."
+  when: ansible_pkg_mgr != "apt"
+
+- name: Install installer dependencies via apt
+  block:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+      become: true
+
+    - name: Ensure installer dependencies are installed
+      ansible.builtin.apt:
+        name: "curl"
+        state: present
+      become: true
+
+  when: ansible_pkg_mgr == "apt"
+
+- name: Install rustup via installer
+  block:
+    - name: Install rustup
+      ansible.builtin.shell: |
+        set -o pipefail
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      args:
+        creates: "{{ ansible_env.HOME }}/.cargo/bin/rustup"
+        executable: /bin/bash

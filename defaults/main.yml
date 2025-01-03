@@ -1,0 +1,3 @@
+---
+rustup_install_method: "package"
+rustup_rust_version: "1.83.0"

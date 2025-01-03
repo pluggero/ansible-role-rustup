@@ -1,0 +1,26 @@
+---
+- name: Install Rustup
+  block:
+    - name: Include OS-specific variables
+      ansible.builtin.include_vars: "{{ var_file }}"
+      with_first_found:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+        - "{{ ansible_lsb.id }}.yml"
+      loop_control:
+        loop_var: var_file
+
+    - name: Install rustup
+      ansible.builtin.include_tasks:
+        file: noauto_install_{{ rustup_install_method }}.yml
+
+    - name: Ensure rust toolchain is installed
+      block:
+        - name: Install and set the default Rust toolchain
+          ansible.builtin.shell: |
+            rustup install {{ rustup_rust_version }}
+            rustup default {{ rustup_rust_version }}
+          args:
+            executable: /bin/bash
