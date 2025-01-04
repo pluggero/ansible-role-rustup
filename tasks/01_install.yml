@@ -50,14 +50,14 @@
       when: "rustup_installed_rust_version != rustup_rust_version"
       block:
         - name: Install rust toolchain
-          command: >
+          ansible.builtin.command: >
             rustup install {{ rustup_rust_version }}
           environment:
             PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
           changed_when: true
 
         - name: Set default rust toolchain
-          command: >
+          ansible.builtin.command: >
             rustup default {{ rustup_rust_version }}
           environment:
             PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
