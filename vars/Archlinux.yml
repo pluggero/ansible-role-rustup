@@ -1,3 +1,6 @@
 ---
+rustup_conflicting_packages:
+  - rust
+
 rustup_distro_packages:
   - rustup

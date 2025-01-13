@@ -12,6 +12,12 @@
         update_cache: true
       become: true
 
+    - name: Remove the conflicting packages that potentially exist on the system
+      community.general.pacman:
+        name: "{{ rustup_conflicting_packages }}"
+        state: absent
+      become: true
+
     - name: Ensure rustup is installed
       community.general.pacman:
         name: "{{ rustup_distro_packages }}"
