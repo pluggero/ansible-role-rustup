@@ -1,0 +1,12 @@
+---
+- name: Uninstall rustup from source
+  block:
+    - name: Uninstall rustup
+      ansible.builtin.command:
+        cmd: "rustup self uninstall -y"
+      environment:
+        PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+      failed_when: false
+      ignore_errors: true
+      register: rustup_uninstall_cmd
+      changed_when: "'uninstalled' in rustup_uninstall_cmd.stdout"

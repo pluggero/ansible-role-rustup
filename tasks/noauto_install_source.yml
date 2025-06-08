@@ -1,0 +1,39 @@
+---
+- name: Ensure rustup is installed
+  block:
+    - name: Import installed rustup version check
+      ansible.builtin.include_tasks: noauto_check_installed_version.yml
+      when: rustup_installed_version is not defined
+
+    - name: Force install if the version numbers do not match
+      ansible.builtin.set_fact:
+        rustup_force_install: true
+      when:
+        - rustup_installed_version is defined
+        - rustup_installed_version != rustup_version
+
+    - name: Install rustup from source
+      when: rustup_installed_version is not defined or rustup_force_install
+      block:
+        - name: Uninstall current rustup installation
+          ansible.builtin.include_tasks: noauto_uninstall.yml
+          when: rustup_installed_version is defined and rustup_installed_version != ""
+
+        - name: Download rustup init
+          ansible.builtin.get_url:
+            url: "{{ rustup_download_url }}"
+            dest: "{{ rustup_download_dir }}/rustup-init"
+            mode: "0700"
+            owner: "{{ ansible_user }}"
+            group: "{{ ansible_user }}"
+
+        - name: Install rustup
+          ansible.builtin.command: >
+            {{ rustup_download_dir }}/rustup-init -y
+          args:
+            creates: "{{ ansible_env.HOME }}/.cargo/bin/rustup"
+
+        - name: Remove rustup init
+          ansible.builtin.file:
+            path: "{{ rustup_download_dir }}/rustup-init"
+            state: absent

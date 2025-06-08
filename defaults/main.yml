@@ -1,3 +1,11 @@
 ---
-rustup_install_method: "package"
-rustup_rust_version: "1.83.0"
+rustup_version: "1.28.0"
+rustup_install_method: "dynamic"
+rustup_force_install: false
+
+rustup_platform: "linux"
+rustup_arch: "x86_64"
+rustup_download_url: "https://static.rust-lang.org/rustup/archive/{{ rustup_version }}/{{ rustup_arch }}-unknown-{{ rustup_platform }}-gnu/rustup-init"
+rustup_download_dir: "/tmp"
+
+rustup_rust_version: "1.85.0"

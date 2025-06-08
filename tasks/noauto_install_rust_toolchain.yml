@@ -1,0 +1,32 @@
+---
+- name: Ensure rust toolchain is installed
+  block:
+    - name: Import installed default rust toolchain version check
+      ansible.builtin.include_tasks: noauto_check_installed_rust_toolchain_version.yml
+      when: rustup_installed_rust_version is not defined
+
+    - name: Uninstall default toolchain
+      ansible.builtin.command: >
+        rustup uninstall stable
+      environment:
+        PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+      register: rustup_uninstall_stable_toolchain_cmd
+      changed_when: "'uninstalled' in rustup_uninstall_stable_toolchain_cmd.stdout"
+      when: rustup_installed_rust_version is defined and rustup_installed_rust_version != ""
+
+    - name: Install defined rust toolchain
+      when: "rustup_installed_rust_version != rustup_rust_version"
+      block:
+        - name: Install rust toolchain
+          ansible.builtin.command: >
+            rustup install {{ rustup_rust_version }}
+          environment:
+            PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+          changed_when: true
+
+        - name: Set default rust toolchain
+          ansible.builtin.command: >
+            rustup default {{ rustup_rust_version }}
+          environment:
+            PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+          changed_when: true

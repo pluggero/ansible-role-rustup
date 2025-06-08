@@ -1,0 +1,20 @@
+---
+- name: Check installed rustup version
+  block:
+    - name: Get installed rustup version
+      ansible.builtin.command:
+        cmd: "rustup --version"
+      environment:
+        PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+      ignore_errors: true
+      changed_when: false
+      failed_when: false
+      register: rustup_installed_version_cmd
+
+    - name: Extract only the version into a variable
+      ansible.builtin.set_fact:
+        rustup_installed_version: "{{ rustup_installed_version_cmd.stdout | regex_replace('^.*?([\\d\\.]{2,}).*$', '\\1') }}"
+
+    - name: Debug installed rustup version
+      ansible.builtin.debug:
+        var: rustup_installed_version
