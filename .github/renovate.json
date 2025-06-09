@@ -1,0 +1,38 @@
+{
+  "extends": [
+    "config:best-practices",
+    ":disableRateLimiting"
+  ],
+  "enabledManagers": [
+    "github-actions",
+    "pip_requirements",
+    "custom.regex",
+    "ansible-galaxy"
+  ],
+  "ansible-galaxy": {
+    "managerFilePatterns": [
+      "/^requirements\\.ya?ml$/"
+    ]
+  },
+  "assignees": [
+    "pluggero"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^defaults/main\\.yml$"],
+      "matchStrings": ["rustup_version:\\s+\"(?<currentValue>[\\d\\.]+)\""],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "rust-lang/rustup",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^defaults/main\\.yml$"],
+      "matchStrings": ["rustup_rust_version:\\s+\"(?<currentValue>[\\d\\.]+)\""],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "rust-lang/rust",
+      "versioningTemplate": "semver"
+    }
+  ]
+}
