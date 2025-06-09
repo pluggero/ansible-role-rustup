@@ -1,5 +1,5 @@
 ---
-rustup_version: "1.28.0"
+rustup_version: "1.28.2"
 rustup_config_dir: "{{ ansible_env.HOME }}/.rustup"
 rustup_config_file: "{{ rustup_config_dir }}/settings.toml"
 rustup_install_method: "dynamic"
