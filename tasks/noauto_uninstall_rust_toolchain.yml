@@ -14,3 +14,4 @@
       when:
         - rustup_installed_rust_version is defined
         - rustup_installed_rust_version != rustup_rust_version
+        - rustup_installed_rust_version != ""
