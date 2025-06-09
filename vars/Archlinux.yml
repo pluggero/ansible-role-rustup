@@ -1,6 +1,4 @@
 ---
-rustup_dep_pkgs: []
-
 rustup_conflicting_pkgs:
   - rust
 

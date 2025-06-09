@@ -1,5 +1,2 @@
 ---
-rustup_dep_pkgs:
-  - curl
-
 rustup_distro_pkgs: []
