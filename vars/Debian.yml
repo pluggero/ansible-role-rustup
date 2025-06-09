@@ -1,2 +1,5 @@
 ---
-rustup_distro_packages: []
+rustup_dep_pkgs:
+  - curl
+
+rustup_distro_pkgs: []

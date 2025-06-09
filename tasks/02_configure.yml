@@ -1,0 +1,45 @@
+---
+- name: Configure rustup
+  block:
+    - name: Add Cargo path script in /etc/profile.d
+      ansible.builtin.copy:
+        dest: /etc/profile.d/cargo_path.sh
+        content: |
+          #!/bin/sh
+          # Add Cargo bin to the PATH for all users
+          if [ -d "$HOME/.cargo/bin" ]; then
+              PATH="$HOME/.cargo/bin:$PATH"
+          fi
+        mode: "0644"
+      become: true
+
+    - name: Read rustup settings.toml
+      ansible.builtin.slurp:
+        src: "{{ ansible_env.HOME }}/.rustup/settings.toml"
+      register: rustup_settings_slurp
+
+    - name: Extract auto_self_update line from rustup settings
+      ansible.builtin.set_fact:
+        rustup_auto_self_update_line: "{{ (rustup_settings_slurp.content | b64decode).split('\n') | select('search', '^auto_self_update\\s*=') | list }}"
+
+    - name: Set rustup_auto_self_update if line exists
+      ansible.builtin.set_fact:
+        rustup_auto_self_update: "{{ rustup_auto_self_update_line[0] | regex_replace('^auto_self_update\\s*=\\s*\\\"(.*?)\\\"$', '\\1') }}"
+      when: rustup_auto_self_update_line | length > 0
+
+    - name: Debug rustup auto_self_update value
+      ansible.builtin.debug:
+        msg: >
+          {% if rustup_auto_self_update is defined %}
+          Current rustup auto_self_update setting: {{ rustup_auto_self_update }}
+          {% else %}
+          auto_self_update is not defined in settings.toml
+          {% endif %}
+
+    - name: Disable rustup auto-update
+      ansible.builtin.command:
+        cmd: "rustup set auto-self-update disable"
+      environment:
+        PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+      changed_when: true
+      when: (rustup_auto_self_update | default('')) != 'disable'

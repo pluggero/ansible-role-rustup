@@ -12,53 +12,17 @@
       loop_control:
         loop_var: var_file
 
+    - name: Include OS-specific dependencies
+      ansible.builtin.include_tasks: "{{ task_file }}"
+      with_first_found:
+        - "noauto_install_dep_{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+        - "noauto_install_dep_{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml"
+        - "noauto_install_dep_{{ ansible_distribution }}.yml"
+        - "noauto_install_dep_{{ ansible_os_family }}.yml"
+        - "noauto_install_dep_{{ ansible_lsb.id }}.yml"
+      loop_control:
+        loop_var: task_file
+
     - name: Install rustup
       ansible.builtin.include_tasks:
         file: noauto_install_{{ rustup_install_method }}.yml
-
-    - name: Add Cargo path script in /etc/profile.d
-      ansible.builtin.copy:
-        dest: /etc/profile.d/cargo_path.sh
-        content: |
-          #!/bin/sh
-          # Add Cargo bin to the PATH for all users
-          if [ -d "$HOME/.cargo/bin" ]; then
-              PATH="$HOME/.cargo/bin:$PATH"
-          fi
-        mode: "0644"
-      become: true
-
-    - name: Get installed default toolchain version
-      ansible.builtin.command:
-        cmd: rustup show active-toolchain
-      ignore_errors: true
-      changed_when: false
-      failed_when: false
-      environment:
-        PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
-      register: rustup_toolchain_version_cmd
-
-    - name: Extract toolchain version into a variable
-      ansible.builtin.set_fact:
-        rustup_installed_rust_version: "{{ rustup_toolchain_version_cmd.stdout | regex_replace('(.*?)-.*$', '\\1') }}"
-
-    - name: Debug installed rust toolchain version
-      ansible.builtin.debug:
-        var: rustup_installed_rust_version
-
-    - name: Install defined rust toolchain
-      when: "rustup_installed_rust_version != rustup_rust_version"
-      block:
-        - name: Install rust toolchain
-          ansible.builtin.command: >
-            rustup install {{ rustup_rust_version }}
-          environment:
-            PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
-          changed_when: true
-
-        - name: Set default rust toolchain
-          ansible.builtin.command: >
-            rustup default {{ rustup_rust_version }}
-          environment:
-            PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
-          changed_when: true

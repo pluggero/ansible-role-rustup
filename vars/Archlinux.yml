@@ -1,6 +1,8 @@
 ---
-rustup_conflicting_packages:
+rustup_dep_pkgs: []
+
+rustup_conflicting_pkgs:
   - rust
 
-rustup_distro_packages:
+rustup_distro_pkgs:
   - rustup

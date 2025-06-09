@@ -1,0 +1,15 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  vars_files:
+    - ../../defaults/main.yml
+
+  tasks:
+    - name: Check installed version
+      ansible.builtin.include_tasks: "../../tasks/noauto_check_installed_rust_toolchain_version.yml"
+
+    - name: Assert installed version is correct
+      ansible.builtin.assert:
+        that:
+          - "rustup_installed_rust_version == rustup_rust_version"

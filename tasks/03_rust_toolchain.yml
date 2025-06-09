@@ -1,0 +1,4 @@
+---
+- name: Install rust toolchain
+  ansible.builtin.include_tasks:
+    file: noauto_install_rust_toolchain.yml
