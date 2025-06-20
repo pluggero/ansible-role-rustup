@@ -6,7 +6,7 @@
     - ../../defaults/main.yml
 
   tasks:
-    - name: Check installed version
+    - name: Check installed rustup version
       ansible.builtin.include_tasks: "../../tasks/noauto_check_installed_version.yml"
 
     - name: Assert rustup version is correct
@@ -14,7 +14,7 @@
         that:
           - "rustup_installed_version == rustup_version"
 
-    - name: Check installed version
+    - name: Check installed rust toolchain version
       ansible.builtin.include_tasks: "../../tasks/noauto_check_installed_rust_toolchain_version.yml"
 
     - name: Assert installed rust version is correct
