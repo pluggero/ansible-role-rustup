@@ -13,6 +13,9 @@
 
     - name: Remove rustup if it is installed
       community.general.pacman:
-        name: "{{ rustup_distro_pkgs }}"
+        name: "{{ package }}"
         state: absent
+      loop: "{{ rustup_distro_pkgs }}"
+      loop_control:
+        loop_var: package
       become: true

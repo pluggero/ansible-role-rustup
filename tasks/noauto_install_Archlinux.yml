@@ -13,12 +13,18 @@
 
     - name: Remove the conflicting packages that potentially exist on the system
       community.general.pacman:
-        name: "{{ rustup_conflicting_pkgs }}"
+        name: "{{ package }}"
         state: absent
+      loop: "{{ rustup_conflicting_pkgs }}"
+      loop_control:
+        loop_var: package
       become: true
 
     - name: Ensure rustup is installed
       community.general.pacman:
-        name: "{{ rustup_distro_pkgs }}"
+        name: "{{ package }}"
         state: present
+      loop: "{{ rustup_distro_pkgs }}"
+      loop_control:
+        loop_var: package
       become: true
