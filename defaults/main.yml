@@ -10,4 +10,4 @@ rustup_arch: "x86_64"
 rustup_download_url: "https://static.rust-lang.org/rustup/archive/{{ rustup_version }}/{{ rustup_arch }}-unknown-{{ rustup_platform }}-gnu/rustup-init"
 rustup_download_dir: "/tmp"
 
-rustup_rust_version: "1.91.1"
+rustup_rust_version: "1.93.0"
