@@ -1,6 +1,7 @@
 ---
 rustup_version: "1.29.0"
-rustup_config_dir: "{{ ansible_env.HOME }}/.rustup"
+rustup_config_dir: "{{ ansible_facts['env']['HOME'] }}/.rustup"
+rustup_cargo_dir: "{{ ansible_facts['env']['HOME'] }}/.cargo"
 rustup_config_file: "{{ rustup_config_dir }}/settings.toml"
 rustup_install_method: "dynamic"
 rustup_force_install: false

@@ -48,6 +48,6 @@
       ansible.builtin.command:
         cmd: "rustup set auto-self-update disable"
       environment:
-        PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+        PATH: "{{ rustup_cargo_dir }}/bin:{{ ansible_env.PATH }}"
       changed_when: true
       when: (rustup_auto_self_update | default('')) != 'disable'
