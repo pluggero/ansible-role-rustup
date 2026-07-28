@@ -8,7 +8,7 @@
       changed_when: false
       failed_when: false
       environment:
-        PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+        PATH: "{{ rustup_cargo_dir }}/bin:{{ ansible_env.PATH }}"
       register: rustup_installed_rust_version_cmd
 
     - name: Extract only the version into a variable

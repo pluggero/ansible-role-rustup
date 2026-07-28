@@ -5,7 +5,7 @@
       ansible.builtin.command:
         cmd: "rustup self uninstall -y"
       environment:
-        PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+        PATH: "{{ rustup_cargo_dir }}/bin:{{ ansible_env.PATH }}"
       failed_when: false
       ignore_errors: true
       register: rustup_uninstall_cmd

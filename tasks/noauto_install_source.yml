@@ -31,7 +31,7 @@
           ansible.builtin.command: >
             {{ rustup_download_dir }}/rustup-init -y
           args:
-            creates: "{{ ansible_env.HOME }}/.cargo/bin/rustup"
+            creates: "{{ rustup_cargo_dir }}/bin/rustup"
 
         - name: Remove rustup init
           ansible.builtin.file:
