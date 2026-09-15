@@ -24,8 +24,8 @@
             url: "{{ rustup_download_url }}"
             dest: "{{ rustup_download_dir }}/rustup-init"
             mode: "0700"
-            owner: "{{ ansible_user }}"
-            group: "{{ ansible_user }}"
+            owner: "{{ ansible_user | default(omit) }}"
+            group: "{{ ansible_user | default(omit) }}"
 
         - name: Install rustup
           ansible.builtin.command: >
