@@ -1,5 +1,5 @@
 ---
-rustup_version: "1.29.0"
+rustup_version: "1.29.1"
 rustup_config_dir: "{{ ansible_facts['env']['HOME'] }}/.rustup"
 rustup_cargo_dir: "{{ ansible_facts['env']['HOME'] }}/.cargo"
 rustup_config_file: "{{ rustup_config_dir }}/settings.toml"
